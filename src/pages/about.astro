@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PhotoBox from "../components/PhotoBox.astro";
+import { site } from "../data/site";
+---
+
+<BaseLayout title="About" description={`Meet the artist behind ${site.brandName}.`}>
+  <section class="about-hero">
+    <div class="container grid grid-2">
+      <div class="fade-in">
+        <span class="eyebrow">Meet the Artist</span>
+        <h1>PLACEHOLDER Name</h1>
+        <p>
+          PLACEHOLDER bio — training, years of experience, signature style, brands worked with,
+          and the philosophy behind the artistry. Replace with the real artist's story.
+        </p>
+        <p>
+          PLACEHOLDER — mention certifications, notable weddings/shoots, and what makes the
+          approach distinct from templated MUA sites.
+        </p>
+      </div>
+      <PhotoBox class="fade-in" ratio="4/5" hoverZoom label="Portrait Photo" />
+    </div>
+  </section>
+
+  <section class="values">
+    <div class="container grid grid-3">
+      <div class="card fade-in">
+        <h3>Philosophy</h3>
+        <p>PLACEHOLDER — the artist's core belief about beauty/makeup.</p>
+      </div>
+      <div class="card fade-in">
+        <h3>Training</h3>
+        <p>PLACEHOLDER — certifications, academies, mentors.</p>
+      </div>
+      <div class="card fade-in">
+        <h3>Experience</h3>
+        <p>PLACEHOLDER — years active, number of brides/clients served.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

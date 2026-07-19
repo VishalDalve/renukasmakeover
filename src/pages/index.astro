@@ -1,0 +1,303 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import InstagramFeed from "../components/InstagramFeed.astro";
+import GoogleReviews from "../components/GoogleReviews.astro";
+import PhotoBox from "../components/PhotoBox.astro";
+import HeroSlideshow from "../components/HeroSlideshow.astro";
+import { site } from "../data/site";
+import { bridalPackages, courses } from "../data/services";
+
+const heroSlides = [
+  { src: "/images/hero/img-1.jpg", alt: "Bride, full length editorial shot", label: "Hero photo 1" },
+  { src: "/images/hero/img-2.jpg", alt: "Bridal close-up with jewelry", label: "Hero photo 2" },
+  { src: "/images/hero/img-3.jpg", alt: "Bride getting ready, candid", label: "Hero photo 3" },
+  { src: "/images/hero/img-4.jpg", alt: "Editorial glam portrait", label: "Hero photo 4" },
+  { src: "/images/hero/img-5.jpg", alt: "Bride with hairstyling detail", label: "Hero photo 5" },
+];
+---
+
+<BaseLayout
+  title="Home"
+  description={`${site.brandName} — premium bridal and editorial makeup artistry in ${site.city}, plus self-makeup & hairstyling classes.`}
+>
+  <section class="hero">
+    <HeroSlideshow slides={heroSlides} intervalMs={3000} />
+    <div class="hero-overlay"></div>
+    <div class="container hero-inner">
+      <span class="eyebrow fade-in">{site.city} &middot; Bridal &amp; Editorial Makeup Artist</span>
+      <h1 class="fade-in">Makeup that feels like you, only more radiant.</h1>
+      <p class="hero-sub fade-in">
+        Premium bridal, party, and editorial makeup artistry — plus self-makeup &amp; hairstyling
+        classes for brides and enthusiasts who want to do it themselves.
+      </p>
+      <div class="hero-actions fade-in">
+        <a class="btn btn-primary" href="/services">Explore Services</a>
+        <a class="btn btn-outline btn-outline-light" href="/classes">See Class Batches</a>
+      </div>
+    </div>
+    <div class="scroll-cue"><span></span></div>
+  </section>
+
+  <section class="editorial">
+    <div class="container editorial-inner">
+      <PhotoBox class="editorial-photo fade-in" ratio="4/5" hoverZoom label="Portrait: artist at work" />
+      <div class="fade-in editorial-text">
+        <span class="eyebrow">Meet the Artist</span>
+        <h2>Editorial-grade artistry, tailored to you</h2>
+        <p>
+          Every look starts with a consultation — skin tone, outfit, and event lighting all shape
+          the final finish. A single cohesive editing style ties every shoot together, so the
+          portfolio reads like one story, not a scrapbook.
+        </p>
+        <a class="btn btn-outline" href="/about">Read the Full Story</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="signature-work">
+    <div class="container">
+      <span class="eyebrow">Portfolio</span>
+      <h2>Signature Work</h2>
+      <div class="signature-grid">
+        <a href="/portfolio" class="signature-tile signature-tile--main fade-in">
+          <PhotoBox ratio="4/5" hoverZoom label="Bridal look, full length" class="signature-photo" />
+          <span class="signature-caption">Bridal</span>
+        </a>
+        <a href="/portfolio" class="signature-tile fade-in">
+          <PhotoBox ratio="1/1" hoverZoom label="Editorial close-up" class="signature-photo" />
+          <span class="signature-caption">Editorial</span>
+        </a>
+        <a href="/portfolio" class="signature-tile fade-in">
+          <PhotoBox ratio="1/1" hoverZoom label="Party glam" class="signature-photo" />
+          <span class="signature-caption">Party</span>
+        </a>
+      </div>
+      <a class="btn btn-outline signature-cta" href="/portfolio">View Full Portfolio</a>
+    </div>
+  </section>
+
+  <section class="classes-teaser">
+    <div class="container editorial-inner editorial-inner--reverse">
+      <div class="fade-in editorial-text">
+        <span class="eyebrow">Learn</span>
+        <h2>Self-Makeup &amp; Hairstyling Classes</h2>
+        <p>
+          From a 1-day crash course to a 3-day intensive, learn the techniques used on real brides —
+          with digital, QR-verifiable certificates on completion.
+        </p>
+        <a class="btn btn-outline" href="/classes">View Course Finder</a>
+      </div>
+      <PhotoBox class="editorial-photo fade-in" ratio="4/5" hoverZoom label="Student practicing a self-makeup look" />
+    </div>
+  </section>
+
+  <section class="packages">
+    <div class="container">
+      <span class="eyebrow">Popular</span>
+      <h2>Bridal Packages</h2>
+      <div class="grid grid-3">
+        {bridalPackages.map((pkg) => (
+          <a href="/services" class="pkg-card fade-in">
+            <PhotoBox ratio="3/4" hoverZoom label={`${pkg.name} photo`} class="pkg-photo" />
+            <div class="pkg-overlay">
+              <h3>{pkg.name}</h3>
+              <p class="price">{pkg.price}</p>
+              <p class="pkg-desc">{pkg.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="courses-preview">
+    <div class="container">
+      <span class="eyebrow">Classes</span>
+      <h2>Find Your Course</h2>
+      <div class="grid grid-4">
+        {courses.map((course) => (
+          <div class="card fade-in">
+            <h3>{course.name}</h3>
+            <p class="price">{course.price}</p>
+            <p>{course.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <GoogleReviews />
+  <InstagramFeed />
+
+  <section class="cta-band">
+    <PhotoBox class="cta-photo" ratio="21/9" hoverZoom label="Studio / bride getting ready, wide shot" />
+    <div class="cta-overlay"></div>
+    <div class="container cta-content">
+      <h2>Ready to book your date?</h2>
+      <p>Reach out on WhatsApp for the fastest response, or send an enquiry through our contact page.</p>
+      <a
+        class="btn btn-whatsapp"
+        href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Hi! I'd like to enquire about a booking.")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chat on WhatsApp
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    max-height: 900px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    padding: 0;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(42,36,32,0.15) 0%, rgba(42,36,32,0.35) 55%, rgba(42,36,32,0.75) 100%);
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    padding-bottom: var(--space-5);
+    color: var(--color-ivory);
+  }
+  .hero h1 { color: var(--color-ivory); }
+  .hero-sub { font-size: 1.1rem; opacity: 0.92; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+  .btn-outline-light { border-color: var(--color-ivory); color: var(--color-ivory); }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: var(--space-2);
+    right: var(--space-3);
+    z-index: 2;
+    width: 1px;
+    height: 48px;
+    background: rgba(250, 246, 240, 0.4);
+    overflow: hidden;
+  }
+  .scroll-cue span {
+    display: block;
+    width: 100%;
+    height: 40%;
+    background: var(--color-ivory);
+    animation: scroll-cue 2s ease-in-out infinite;
+  }
+  @keyframes scroll-cue {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(250%); }
+  }
+
+  /* ---------- Editorial split (Meet the Artist / Classes teaser) ---------- */
+  .editorial-inner {
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+  .editorial-inner--reverse :global(.editorial-photo) { order: -1; }
+  @media (min-width: 800px) {
+    .editorial-inner { grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+    .editorial-inner--reverse { grid-template-columns: 1fr 1fr; }
+    .editorial-inner--reverse :global(.editorial-photo) { order: 1; }
+  }
+  .classes-teaser { background: #fff; }
+
+  /* ---------- Signature Work (asymmetric portfolio teaser) ---------- */
+  .signature-grid {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: 1fr;
+    margin: var(--space-3) 0;
+  }
+  .signature-tile {
+    position: relative;
+    display: block;
+    overflow: hidden;
+  }
+  @media (min-width: 700px) {
+    .signature-grid {
+      grid-template-columns: 1.4fr 1fr;
+      grid-template-rows: repeat(2, 1fr);
+    }
+    .signature-tile--main { grid-row: span 2; }
+  }
+  .signature-caption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: var(--space-2) var(--space-3);
+    background: linear-gradient(0deg, rgba(42,36,32,0.75), transparent);
+    color: var(--color-ivory);
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    transform: translateY(8px);
+    opacity: 0.85;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .signature-tile:hover .signature-caption { transform: translateY(0); opacity: 1; }
+  .signature-cta { margin-top: var(--space-1); }
+
+  /* ---------- Image-backed package cards ---------- */
+  .pkg-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    color: var(--color-ivory);
+  }
+  :global(.pkg-photo) { position: relative; }
+  .pkg-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-3);
+    background: linear-gradient(0deg, rgba(42,36,32,0.85) 0%, rgba(42,36,32,0.25) 55%, transparent 100%);
+  }
+  .pkg-overlay h3 { color: var(--color-ivory); margin-bottom: 0.25rem; }
+  .pkg-overlay .price { color: var(--color-gold); font-weight: 700; margin-bottom: 0.4rem; }
+  .pkg-desc { font-size: 0.85rem; opacity: 0.9; margin-bottom: 0; }
+
+  .price { color: var(--color-emerald); font-weight: 700; margin-bottom: var(--space-1); }
+
+  /* ---------- CTA band with background photo ---------- */
+  .cta-band {
+    position: relative;
+    padding: 0;
+    color: var(--color-ivory);
+    text-align: center;
+    overflow: hidden;
+  }
+  :global(.cta-photo) {
+    aspect-ratio: auto !important;
+    height: 420px;
+  }
+  :global(.cta-photo img),
+  :global(.cta-photo .photo-box__placeholder) { height: 100%; border: none; }
+  .cta-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(107,30,43,0.85), rgba(62,36,56,0.85));
+  }
+  .cta-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+  .cta-content h2 { color: var(--color-ivory); }
+</style>

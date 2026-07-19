@@ -1,0 +1,89 @@
+---
+// Build-time fetch from the Instagram Graph API. Falls back to a placeholder
+// grid when INSTAGRAM_ACCESS_TOKEN / INSTAGRAM_USER_ID aren't set yet (see SETUP.md).
+import { site } from "../data/site";
+
+const token = import.meta.env.INSTAGRAM_ACCESS_TOKEN;
+const userId = import.meta.env.INSTAGRAM_USER_ID;
+
+let posts: Array<{ id: string; media_url: string; permalink: string; caption?: string; media_type: string }> = [];
+let isLive = false;
+
+if (token && userId) {
+  try {
+    const res = await fetch(
+      `https://graph.instagram.com/${userId}/media?fields=id,caption,media_url,permalink,media_type,thumbnail_url&access_token=${token}&limit=8`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      posts = data.data ?? [];
+      isLive = true;
+    }
+  } catch {
+    // Network/API failure at build time — fall through to placeholder.
+  }
+}
+
+const placeholderCount = 8;
+---
+
+<section class="instagram">
+  <div class="container">
+    <span class="eyebrow">Follow Along</span>
+    <h2>@{site.instagramHandle}</h2>
+
+    {isLive && posts.length > 0 ? (
+      <div class="grid grid-4 ig-grid">
+        {posts.map((post) => (
+          <a href={post.permalink} target="_blank" rel="noopener noreferrer" class="ig-tile fade-in">
+            <img
+              src={post.media_type === "VIDEO" ? (post as any).thumbnail_url : post.media_url}
+              alt={post.caption?.slice(0, 100) ?? "Instagram post"}
+              loading="lazy"
+            />
+          </a>
+        ))}
+      </div>
+    ) : (
+      <>
+        <p class="ig-note">
+          Live feed connects once the Instagram Graph API is configured — see <code>SETUP.md</code>.
+        </p>
+        <div class="grid grid-4 ig-grid">
+          {Array.from({ length: placeholderCount }).map((_, i) => (
+            <div class="ig-tile ig-placeholder fade-in">
+              <span>Post {i + 1}</span>
+            </div>
+          ))}
+        </div>
+      </>
+    )}
+
+    <a class="btn btn-outline ig-cta" href={site.instagramUrl} target="_blank" rel="noopener noreferrer">
+      View on Instagram
+    </a>
+  </div>
+</section>
+
+<style>
+  .instagram { background: #fff; }
+  .ig-grid { margin: var(--space-3) 0; grid-template-columns: repeat(2, 1fr); }
+  .ig-tile {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--color-ivory);
+  }
+  .ig-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+  .ig-tile:hover img { transform: scale(1.05); }
+  .ig-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gold);
+    font-size: 0.8rem;
+    border: 1px dashed rgba(185, 141, 62, 0.4);
+  }
+  .ig-note { font-size: 0.85rem; opacity: 0.65; }
+  .ig-cta { margin-top: var(--space-2); }
+  @media (min-width: 640px) { .ig-grid { grid-template-columns: repeat(4, 1fr); } }
+</style>

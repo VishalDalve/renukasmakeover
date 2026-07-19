@@ -1,0 +1,72 @@
+---
+// Build-time fetch from the Google Places API (Place Details -> reviews).
+// Falls back to placeholder testimonials when GOOGLE_PLACES_API_KEY / GOOGLE_PLACE_ID
+// aren't set yet (see SETUP.md).
+const apiKey = import.meta.env.GOOGLE_PLACES_API_KEY;
+const placeId = import.meta.env.GOOGLE_PLACE_ID;
+
+let rating: number | null = null;
+let totalReviews = 0;
+let reviews: Array<{ author_name: string; rating: number; text: string; relative_time_description: string }> = [];
+let isLive = false;
+
+if (apiKey && placeId) {
+  try {
+    const res = await fetch(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=rating,user_ratings_total,reviews&key=${apiKey}`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data.status === "OK") {
+        rating = data.result.rating ?? null;
+        totalReviews = data.result.user_ratings_total ?? 0;
+        reviews = (data.result.reviews ?? []).slice(0, 6);
+        isLive = true;
+      }
+    }
+  } catch {
+    // Fall through to placeholder.
+  }
+}
+
+const placeholderReviews = [
+  { author_name: "Client Name", rating: 5, text: "Placeholder testimonial — replace with real Google reviews once GBP + Places API are connected. See SETUP.md.", relative_time_description: "recently" },
+  { author_name: "Client Name", rating: 5, text: "Placeholder testimonial two.", relative_time_description: "recently" },
+  { author_name: "Client Name", rating: 5, text: "Placeholder testimonial three.", relative_time_description: "recently" },
+];
+
+const displayReviews = isLive ? reviews : placeholderReviews;
+---
+
+<section class="reviews">
+  <div class="container">
+    <span class="eyebrow">Client Love</span>
+    <h2>{isLive && rating ? `${rating.toFixed(1)} ★ from ${totalReviews} Google reviews` : "What Clients Say"}</h2>
+    {!isLive && (
+      <p class="reviews-note">
+        Live Google rating connects once the Places API is configured — see <code>SETUP.md</code>.
+      </p>
+    )}
+
+    <div class="grid grid-3">
+      {displayReviews.map((review) => (
+        <blockquote class="card review-card fade-in">
+          <p class="stars">{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</p>
+          <p>&ldquo;{review.text}&rdquo;</p>
+          <footer>
+            <strong>{review.author_name}</strong>
+            <span class="review-time">{review.relative_time_description}</span>
+          </footer>
+        </blockquote>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .review-card { display: flex; flex-direction: column; gap: 0.5rem; }
+  .stars { color: var(--color-gold); letter-spacing: 0.1em; margin: 0; }
+  .review-card footer { display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: auto; }
+  .review-time { opacity: 0.6; }
+  .reviews-note { font-size: 0.85rem; opacity: 0.65; }
+</style>

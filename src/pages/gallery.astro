@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PhotoBox from "../components/PhotoBox.astro";
+import { site } from "../data/site";
+---
+
+<BaseLayout title="Gallery & Press" description={`Press features and gallery for ${site.brandName}.`}>
+  <section>
+    <div class="container">
+      <span class="eyebrow">Gallery &amp; Press</span>
+      <h1>Featured Work &amp; Mentions</h1>
+      <div class="grid grid-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div class="press-tile fade-in">
+            <PhotoBox ratio="4/3" hoverZoom label={`Press/Feature ${i + 1}`} />
+          </div>
+        ))}
+      </div>
+      <p class="note">Placeholder — replace with real press mentions, magazine features, or vendor collaborations.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .note { font-size: 0.85rem; opacity: 0.6; margin-top: var(--space-2); }
+</style>

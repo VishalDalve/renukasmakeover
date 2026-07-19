@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PhotoBox from "../components/PhotoBox.astro";
+import { site } from "../data/site";
+
+const categories = ["All", "Bridal", "Party", "Editorial", "Family", "Before/After"];
+const placeholderItems = Array.from({ length: 12 }).map((_, i) => ({
+  id: i + 1,
+  category: categories[(i % (categories.length - 1)) + 1],
+}));
+---
+
+<BaseLayout title="Portfolio" description={`Browse the makeup portfolio for ${site.brandName}.`}>
+  <section class="portfolio-hero">
+    <div class="container">
+      <span class="eyebrow">Portfolio</span>
+      <h1>A look for every occasion</h1>
+      <div class="filters">
+        {categories.map((cat, i) => (
+          <button class:list={["filter-btn", { active: i === 0 }]} data-filter={cat}>{cat}</button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="portfolio-grid-section">
+    <div class="container">
+      <div class="grid grid-4 portfolio-grid">
+        {placeholderItems.map((item) => (
+          <div class="portfolio-tile fade-in" data-category={item.category}>
+            <PhotoBox ratio="3/4" hoverZoom label={`${item.category} #${item.id}`} />
+          </div>
+        ))}
+      </div>
+      <p class="portfolio-note">
+        Placeholder tiles — replace with real, consistently edited photography once available.
+      </p>
+    </div>
+  </section>
+
+  <script>
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    const tiles = document.querySelectorAll<HTMLElement>(".portfolio-tile");
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        buttons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const filter = btn.dataset.filter;
+        tiles.forEach((tile) => {
+          const show = filter === "All" || tile.dataset.category === filter;
+          tile.style.display = show ? "" : "none";
+        });
+      });
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-top: var(--space-2);
+  }
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-emerald);
+    background: transparent;
+    color: var(--color-emerald);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .filter-btn.active { background: var(--color-emerald); color: var(--color-ivory); }
+
+  .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+  .portfolio-note { font-size: 0.85rem; opacity: 0.6; margin-top: var(--space-2); }
+
+  @media (min-width: 640px) {
+    .portfolio-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 900px) {
+    .portfolio-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

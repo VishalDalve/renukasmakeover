@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { site } from "../../data/site";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+---
+
+<BaseLayout title="Blog" description={`Bridal beauty tips and behind-the-scenes from ${site.brandName}.`}>
+  <section>
+    <div class="container">
+      <span class="eyebrow">Blog</span>
+      <h1>Beauty Notes &amp; Bridal Tips</h1>
+      <div class="grid grid-3">
+        {posts.map((post) => (
+          <a class="card blog-card fade-in" href={`/blog/${post.id}`}>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+            <span class="date">{post.data.publishDate.toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" })}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-card { display: flex; flex-direction: column; gap: 0.5rem; }
+  .date { font-size: 0.8rem; opacity: 0.6; }
+</style>

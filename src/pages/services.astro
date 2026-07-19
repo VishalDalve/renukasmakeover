@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+import { bridalPackages, otherServices } from "../data/services";
+---
+
+<BaseLayout title="Services & Pricing" description={`Bridal, party, and editorial makeup pricing for ${site.brandName}.`}>
+  <section class="services-hero">
+    <div class="container">
+      <span class="eyebrow">Services &amp; Pricing</span>
+      <h1>Transparent packages, tailored looks</h1>
+      <p>Starting prices below — final quote depends on look complexity, location, and travel.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Bridal Packages</h2>
+      <div class="grid grid-3">
+        {bridalPackages.map((pkg) => (
+          <div class="card fade-in">
+            <h3>{pkg.name}</h3>
+            <p class="price">{pkg.price}</p>
+            <p>{pkg.description}</p>
+            <a
+              class="btn btn-whatsapp"
+              href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent(`Hi! I'd like to enquire about the ${pkg.name} package.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Enquire on WhatsApp
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Party, Family &amp; Add-ons</h2>
+      <div class="grid grid-2 other-services">
+        {otherServices.map((svc) => (
+          <div class="service-row fade-in">
+            <span>{svc.name}</span>
+            <span class="price">{svc.price}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .price { color: var(--color-emerald); font-weight: 700; margin-bottom: var(--space-1); }
+  .other-services { grid-template-columns: 1fr; }
+  .service-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-2);
+    background: #fff;
+    border: 1px solid rgba(42, 36, 32, 0.08);
+  }
+  @media (min-width: 640px) { .other-services { grid-template-columns: repeat(2, 1fr); } }
+</style>

@@ -1,0 +1,95 @@
+---
+// Drop-in image box. Pass `src` once a real photo exists in /public/images —
+// until then it renders a labeled placeholder with the same box/zoom behavior,
+// so swapping in real photography later requires no markup changes.
+interface Props {
+  src?: string;
+  alt?: string;
+  label?: string;
+  ratio?: string; // e.g. "3/4", "16/9", "1/1"
+  class?: string;
+  kenburns?: boolean;
+  hoverZoom?: boolean;
+  eager?: boolean;
+}
+
+const {
+  src,
+  alt = "",
+  label = "Replace with photo",
+  ratio = "4/5",
+  class: className = "",
+  kenburns = false,
+  hoverZoom = false,
+  eager = false,
+} = Astro.props;
+---
+
+<div
+  class:list={[
+    "photo-box",
+    { "photo-box--kenburns": kenburns, "photo-box--hover": hoverZoom },
+    className,
+  ]}
+  style={`--ratio: ${ratio}`}
+>
+  {src ? (
+    <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} />
+  ) : (
+    <div class="photo-box__placeholder">
+      <span>{label}</span>
+    </div>
+  )}
+</div>
+
+<style>
+  .photo-box {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--ratio);
+    background: linear-gradient(135deg, #e7ddce, #d8c9b3);
+  }
+  .photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .photo-box__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-2);
+    color: rgba(42, 36, 32, 0.45);
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    border: 1px dashed rgba(42, 36, 32, 0.2);
+  }
+
+  .photo-box--hover:hover img,
+  .photo-box--hover:hover .photo-box__placeholder {
+    transform: scale(1.06);
+  }
+  .photo-box--hover .photo-box__placeholder { transition: transform 1.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
+
+  .photo-box--kenburns img,
+  .photo-box--kenburns .photo-box__placeholder {
+    animation: kenburns 18s ease-in-out infinite alternate;
+  }
+
+  @keyframes kenburns {
+    from { transform: scale(1) translate(0, 0); }
+    to { transform: scale(1.12) translate(-1%, -1%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-box--kenburns img,
+    .photo-box--kenburns .photo-box__placeholder { animation: none; }
+    .photo-box--hover:hover img,
+    .photo-box--hover:hover .photo-box__placeholder { transform: none; }
+  }
+</style>
