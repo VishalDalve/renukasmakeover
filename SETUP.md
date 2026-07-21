@@ -18,7 +18,6 @@ Everything marked `PLACEHOLDER` needs a real value before launch:
 - `src/pages/about.astro` — artist bio, photo.
 - `src/pages/portfolio.astro`, `src/pages/gallery.astro` — real photos (currently dashed placeholder tiles).
 - `src/content/blog/*.md` — real blog posts.
-- `src/pages/contact.astro` — Web3Forms access key (see below).
 
 ## Integrations
 
@@ -28,9 +27,8 @@ For detailed, step-by-step instructions (with exact click paths, curl commands, 
 
 1. **Instagram** — live auto-refreshing feed via the Instagram Graph API (`INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_USER_ID`)
 2. **Google Reviews** — live rating widget via the Google Places API (`GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID`)
-3. **Google Maps** — location embed via the Maps Embed API (`PUBLIC_GOOGLE_MAPS_EMBED_KEY`)
+3. **Google Maps** — location embed set directly via `site.googleMapsEmbedSrc` in `src/data/site.ts` (a "Share > Embed a map" URL, no API key needed). `PUBLIC_GOOGLE_MAPS_EMBED_KEY` remains a fallback if that field is ever cleared.
 4. **WhatsApp** — click-to-chat (already working, just update the number in `src/data/site.ts`) and the Cloud API for later automation
-5. **Contact form** — Web3Forms access key
 
 ## Not yet wired up (per project scope)
 

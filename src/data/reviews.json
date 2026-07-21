@@ -1,0 +1,22 @@
+{
+  "reviews": [
+    {
+      "author": "Client Name",
+      "rating": 5,
+      "text": "Replace this with a real Google review — copy the text from Google Business Profile. Google's Places API only ever returns 5 reviews per place (a hard platform limit, not configurable), so anything beyond that is curated here manually.",
+      "time": "recently"
+    },
+    {
+      "author": "Client Name",
+      "rating": 5,
+      "text": "Add another curated review here. These appear after the live Google reviews once someone clicks \"View More\".",
+      "time": "recently"
+    },
+    {
+      "author": "Client Name",
+      "rating": 5,
+      "text": "Add as many as you like — the page paginates automatically, 3 at a time.",
+      "time": "recently"
+    }
+  ]
+}

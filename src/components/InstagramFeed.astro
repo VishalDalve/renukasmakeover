@@ -1,89 +1,107 @@
 ---
-// Build-time fetch from the Instagram Graph API. Falls back to a placeholder
-// grid when INSTAGRAM_ACCESS_TOKEN / INSTAGRAM_USER_ID aren't set yet (see SETUP.md).
+// Renders live Instagram embeds (reels + posts) sourced from src/data/instagram.json.
+// To add/remove/reorder posts for any page, edit that JSON file only — no component changes needed.
 import { site } from "../data/site";
+import InstagramEmbed from "./InstagramEmbed.astro";
+import instagramData from "../data/instagram.json";
 
-const token = import.meta.env.INSTAGRAM_ACCESS_TOKEN;
-const userId = import.meta.env.INSTAGRAM_USER_ID;
-
-let posts: Array<{ id: string; media_url: string; permalink: string; caption?: string; media_type: string }> = [];
-let isLive = false;
-
-if (token && userId) {
-  try {
-    const res = await fetch(
-      `https://graph.instagram.com/${userId}/media?fields=id,caption,media_url,permalink,media_type,thumbnail_url&access_token=${token}&limit=8`
-    );
-    if (res.ok) {
-      const data = await res.json();
-      posts = data.data ?? [];
-      isLive = true;
-    }
-  } catch {
-    // Network/API failure at build time — fall through to placeholder.
-  }
+interface Props {
+  page: string;
 }
 
-const placeholderCount = 8;
+const { page } = Astro.props as Props;
+
+const entry = (instagramData as Record<string, { videos?: { url: string }[]; images?: { url: string }[] }>)[page] ?? {};
+const videos = entry.videos ?? [];
+const images = entry.images ?? [];
 ---
 
-<section class="instagram">
-  <div class="container">
-    <span class="eyebrow">Follow Along</span>
-    <h2>@{site.instagramHandle}</h2>
+{(videos.length > 0 || images.length > 0) && (
+  <section class="instagram">
+    <div class="container">
+      <span class="eyebrow">Follow Along</span>
+      <h2>@{site.instagramHandle}</h2>
 
-    {isLive && posts.length > 0 ? (
-      <div class="grid grid-4 ig-grid">
-        {posts.map((post) => (
-          <a href={post.permalink} target="_blank" rel="noopener noreferrer" class="ig-tile fade-in">
-            <img
-              src={post.media_type === "VIDEO" ? (post as any).thumbnail_url : post.media_url}
-              alt={post.caption?.slice(0, 100) ?? "Instagram post"}
-              loading="lazy"
-            />
-          </a>
-        ))}
-      </div>
-    ) : (
-      <>
-        <p class="ig-note">
-          Live feed connects once the Instagram Graph API is configured — see <code>SETUP.md</code>.
-        </p>
-        <div class="grid grid-4 ig-grid">
-          {Array.from({ length: placeholderCount }).map((_, i) => (
-            <div class="ig-tile ig-placeholder fade-in">
-              <span>Post {i + 1}</span>
-            </div>
-          ))}
-        </div>
-      </>
-    )}
+      {videos.length > 0 && (
+        <>
+          <h3 class="ig-subhead">Reels</h3>
+          <div class="ig-grid">
+            {videos.map((v) => (
+              <div class="ig-tile fade-in">
+                <InstagramEmbed url={v.url} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
-    <a class="btn btn-outline ig-cta" href={site.instagramUrl} target="_blank" rel="noopener noreferrer">
-      View on Instagram
-    </a>
-  </div>
-</section>
+      {images.length > 0 && (
+        <>
+          <h3 class="ig-subhead">Posts</h3>
+          <div class="ig-grid">
+            {images.map((img) => (
+              <div class="ig-tile fade-in">
+                <InstagramEmbed url={img.url} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      <a class="btn btn-outline ig-cta" href={site.instagramUrl} target="_blank" rel="noopener noreferrer">
+        View on Instagram
+      </a>
+    </div>
+  </section>
+)}
+
+<script async defer src="//www.instagram.com/embed.js" is:inline></script>
+<script is:inline>
+  // Instagram's embed script often only fully hydrates the first blockquote when
+  // several load at once (silent CDN throttling) — the rest stay stuck as static
+  // "Watch on Instagram" fallbacks. Reprocessing a few times after load reliably
+  // catches the stragglers without affecting embeds that already rendered fine.
+  (function () {
+    function reprocess() {
+      if (window.instgrm && window.instgrm.Embeds) {
+        window.instgrm.Embeds.process();
+      }
+    }
+    window.addEventListener("load", reprocess);
+    [1000, 2500, 4500].forEach((delay) => setTimeout(reprocess, delay));
+  })();
+</script>
 
 <style>
   .instagram { background: #fff; }
-  .ig-grid { margin: var(--space-3) 0; grid-template-columns: repeat(2, 1fr); }
-  .ig-tile {
-    aspect-ratio: 1;
-    overflow: hidden;
-    background: var(--color-ivory);
+  .ig-subhead {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-2);
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    opacity: 0.7;
   }
-  .ig-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
-  .ig-tile:hover img { transform: scale(1.05); }
-  .ig-placeholder {
-    display: flex;
-    align-items: center;
+  .ig-grid {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: 1fr;
     justify-content: center;
-    color: var(--color-gold);
-    font-size: 0.8rem;
-    border: 1px dashed rgba(185, 141, 62, 0.4);
+    align-items: start;
   }
-  .ig-note { font-size: 0.85rem; opacity: 0.65; }
-  .ig-cta { margin-top: var(--space-2); }
-  @media (min-width: 640px) { .ig-grid { grid-template-columns: repeat(4, 1fr); } }
+  .ig-tile {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  }
+  .ig-tile :global(iframe) { width: 100% !important; }
+  .ig-cta { margin-top: var(--space-3); }
+  @media (min-width: 700px) {
+    .ig-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .ig-grid { grid-template-columns: repeat(3, 1fr); }
+  }
 </style>

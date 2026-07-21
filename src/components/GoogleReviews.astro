@@ -1,13 +1,19 @@
 ---
-// Build-time fetch from the Google Places API (Place Details -> reviews).
-// Falls back to placeholder testimonials when GOOGLE_PLACES_API_KEY / GOOGLE_PLACE_ID
-// aren't set yet (see SETUP.md).
+// Live reviews come from the Google Places API (Place Details -> reviews) when
+// GOOGLE_PLACES_API_KEY / GOOGLE_PLACE_ID are set — see SETUP.md. Google's API
+// caps this at 5 reviews per place; there is no official way to paginate past
+// that. To show more than 5 with a working "View More", add extra reviews to
+// src/data/reviews.json — they render after the live ones, no code changes needed.
+import curated from "../data/reviews.json";
+
 const apiKey = import.meta.env.GOOGLE_PLACES_API_KEY;
 const placeId = import.meta.env.GOOGLE_PLACE_ID;
 
+type Review = { author_name: string; rating: number; text: string; relative_time_description: string };
+
+let liveReviews: Review[] = [];
 let rating: number | null = null;
 let totalReviews = 0;
-let reviews: Array<{ author_name: string; rating: number; text: string; relative_time_description: string }> = [];
 let isLive = false;
 
 if (apiKey && placeId) {
@@ -20,22 +26,24 @@ if (apiKey && placeId) {
       if (data.status === "OK") {
         rating = data.result.rating ?? null;
         totalReviews = data.result.user_ratings_total ?? 0;
-        reviews = (data.result.reviews ?? []).slice(0, 6);
+        liveReviews = data.result.reviews ?? [];
         isLive = true;
       }
     }
   } catch {
-    // Fall through to placeholder.
+    // Fall through to curated-only.
   }
 }
 
-const placeholderReviews = [
-  { author_name: "Client Name", rating: 5, text: "Placeholder testimonial — replace with real Google reviews once GBP + Places API are connected. See SETUP.md.", relative_time_description: "recently" },
-  { author_name: "Client Name", rating: 5, text: "Placeholder testimonial two.", relative_time_description: "recently" },
-  { author_name: "Client Name", rating: 5, text: "Placeholder testimonial three.", relative_time_description: "recently" },
-];
+const curatedReviews: Review[] = (curated.reviews ?? []).map((r) => ({
+  author_name: r.author,
+  rating: r.rating,
+  text: r.text,
+  relative_time_description: r.time,
+}));
 
-const displayReviews = isLive ? reviews : placeholderReviews;
+const allReviews = [...liveReviews, ...curatedReviews];
+const PAGE_SIZE = 3;
 ---
 
 <section class="reviews">
@@ -48,9 +56,9 @@ const displayReviews = isLive ? reviews : placeholderReviews;
       </p>
     )}
 
-    <div class="grid grid-3">
-      {displayReviews.map((review) => (
-        <blockquote class="card review-card fade-in">
+    <div class="grid grid-3 reviews-grid" data-page-size={PAGE_SIZE}>
+      {allReviews.map((review, i) => (
+        <blockquote class="card review-card fade-in" data-index={i} style={i >= PAGE_SIZE ? "display:none" : undefined}>
           <p class="stars">{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</p>
           <p>&ldquo;{review.text}&rdquo;</p>
           <footer>
@@ -60,8 +68,32 @@ const displayReviews = isLive ? reviews : placeholderReviews;
         </blockquote>
       ))}
     </div>
+
+    {allReviews.length > PAGE_SIZE && (
+      <button class="btn btn-outline reviews-more" type="button">View More</button>
+    )}
   </div>
 </section>
+
+<script>
+  function initReviews(section: HTMLElement) {
+    const grid = section.querySelector<HTMLElement>(".reviews-grid");
+    const button = section.querySelector<HTMLButtonElement>(".reviews-more");
+    if (!grid || !button) return;
+
+    const pageSize = Number(grid.dataset.pageSize) || 3;
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>(".review-card"));
+    let shown = pageSize;
+
+    button.addEventListener("click", () => {
+      cards.slice(shown, shown + pageSize).forEach((card) => (card.style.display = ""));
+      shown += pageSize;
+      if (shown >= cards.length) button.remove();
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>(".reviews").forEach(initReviews);
+</script>
 
 <style>
   .review-card { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -69,4 +101,5 @@ const displayReviews = isLive ? reviews : placeholderReviews;
   .review-card footer { display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: auto; }
   .review-time { opacity: 0.6; }
   .reviews-note { font-size: 0.85rem; opacity: 0.65; }
+  .reviews-more { margin-top: var(--space-3); }
 </style>

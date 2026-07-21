@@ -197,31 +197,6 @@ This is a build-later item; nothing in the current codebase references it yet.
 
 ---
 
-## 5. Web3Forms (contact form backend)
-
-Used by: `src/pages/contact.astro` · No `.env` var — the key lives inline in the form's `action`.
-
-### Step 1 — Get a free access key
-1. Go to [web3forms.com](https://web3forms.com)
-2. Enter the email address that should receive form submissions
-3. Copy the access key emailed to you instantly (no account/signup required)
-
-### Step 2 — Add it to the form
-In `src/pages/contact.astro`, replace:
-```html
-<input type="hidden" name="access_key" value="PLACEHOLDER_WEB3FORMS_ACCESS_KEY" />
-```
-with your real key.
-
-### Step 3 — Verify
-Restart `npm run dev`, submit the `/contact` form with test data, confirm the email arrives.
-
-### Troubleshooting
-- **No email received** — check spam folder first; Web3Forms sends from their own domain.
-- **"Invalid access key"** — key copy-pasted with extra whitespace, or using someone else's key.
-
----
-
 ## Quick reference — all `.env` variables
 
 | Variable | Section | Exposed to browser? |

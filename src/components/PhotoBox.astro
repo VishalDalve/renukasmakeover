@@ -22,6 +22,7 @@ const {
   kenburns = false,
   hoverZoom = false,
   eager = false,
+  ...rest
 } = Astro.props;
 ---
 
@@ -32,6 +33,7 @@ const {
     className,
   ]}
   style={`--ratio: ${ratio}`}
+  {...rest}
 >
   {src ? (
     <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} />
@@ -48,6 +50,7 @@ const {
     overflow: hidden;
     aspect-ratio: var(--ratio);
     background: linear-gradient(135deg, #e7ddce, #d8c9b3);
+    border-radius: var(--radius);
   }
   .photo-box img {
     width: 100%;

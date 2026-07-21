@@ -24,13 +24,13 @@ const heroSlides = [
     <HeroSlideshow slides={heroSlides} intervalMs={3000} />
     <div class="hero-overlay"></div>
     <div class="container hero-inner">
-      <span class="eyebrow fade-in">{site.city} &middot; Bridal &amp; Editorial Makeup Artist</span>
-      <h1 class="fade-in">Makeup that feels like you, only more radiant.</h1>
-      <p class="hero-sub fade-in">
+      <span class="eyebrow" data-aos="fade-up" data-aos-delay="0">{site.city} &middot; Bridal &amp; Editorial Makeup Artist</span>
+      <h1 data-aos="fade-up" data-aos-delay="100">Makeup that feels like you, only more radiant.</h1>
+      <p class="hero-sub" data-aos="fade-up" data-aos-delay="200">
         Premium bridal, party, and editorial makeup artistry — plus self-makeup &amp; hairstyling
         classes for brides and enthusiasts who want to do it themselves.
       </p>
-      <div class="hero-actions fade-in">
+      <div class="hero-actions" data-aos="fade-up" data-aos-delay="300">
         <a class="btn btn-primary" href="/services">Explore Services</a>
         <a class="btn btn-outline btn-outline-light" href="/classes">See Class Batches</a>
       </div>
@@ -40,8 +40,16 @@ const heroSlides = [
 
   <section class="editorial">
     <div class="container editorial-inner">
-      <PhotoBox class="editorial-photo fade-in" ratio="4/5" hoverZoom label="Portrait: artist at work" />
-      <div class="fade-in editorial-text">
+      <PhotoBox
+        class="editorial-photo"
+        ratio="4/5"
+        hoverZoom
+        src="/images/hero/artist_at_work.jpeg"
+        alt="Renuka applying makeup to a bride, close-up of hands at work"
+        label="Portrait: artist at work"
+        data-aos="fade-right"
+      />
+      <div class="editorial-text" data-aos="fade-left">
         <span class="eyebrow">Meet the Artist</span>
         <h2>Editorial-grade artistry, tailored to you</h2>
         <p>
@@ -59,15 +67,15 @@ const heroSlides = [
       <span class="eyebrow">Portfolio</span>
       <h2>Signature Work</h2>
       <div class="signature-grid">
-        <a href="/portfolio" class="signature-tile signature-tile--main fade-in">
+        <a href="/portfolio" class="signature-tile signature-tile--main" data-aos="zoom-in" data-aos-delay="0">
           <PhotoBox ratio="4/5" hoverZoom label="Bridal look, full length" class="signature-photo" />
           <span class="signature-caption">Bridal</span>
         </a>
-        <a href="/portfolio" class="signature-tile fade-in">
+        <a href="/portfolio" class="signature-tile" data-aos="zoom-in" data-aos-delay="150">
           <PhotoBox ratio="1/1" hoverZoom label="Editorial close-up" class="signature-photo" />
           <span class="signature-caption">Editorial</span>
         </a>
-        <a href="/portfolio" class="signature-tile fade-in">
+        <a href="/portfolio" class="signature-tile" data-aos="zoom-in" data-aos-delay="300">
           <PhotoBox ratio="1/1" hoverZoom label="Party glam" class="signature-photo" />
           <span class="signature-caption">Party</span>
         </a>
@@ -78,7 +86,7 @@ const heroSlides = [
 
   <section class="classes-teaser">
     <div class="container editorial-inner editorial-inner--reverse">
-      <div class="fade-in editorial-text">
+      <div class="editorial-text" data-aos="fade-right">
         <span class="eyebrow">Learn</span>
         <h2>Self-Makeup &amp; Hairstyling Classes</h2>
         <p>
@@ -87,7 +95,7 @@ const heroSlides = [
         </p>
         <a class="btn btn-outline" href="/classes">View Course Finder</a>
       </div>
-      <PhotoBox class="editorial-photo fade-in" ratio="4/5" hoverZoom label="Student practicing a self-makeup look" />
+      <PhotoBox class="editorial-photo" ratio="4/5" hoverZoom label="Student practicing a self-makeup look" data-aos="fade-left" />
     </div>
   </section>
 
@@ -96,8 +104,8 @@ const heroSlides = [
       <span class="eyebrow">Popular</span>
       <h2>Bridal Packages</h2>
       <div class="grid grid-3">
-        {bridalPackages.map((pkg) => (
-          <a href="/services" class="pkg-card fade-in">
+        {bridalPackages.map((pkg, i) => (
+          <a href="/services" class="pkg-card" data-aos="fade-up" data-aos-delay={i * 120}>
             <PhotoBox ratio="3/4" hoverZoom label={`${pkg.name} photo`} class="pkg-photo" />
             <div class="pkg-overlay">
               <h3>{pkg.name}</h3>
@@ -115,8 +123,8 @@ const heroSlides = [
       <span class="eyebrow">Classes</span>
       <h2>Find Your Course</h2>
       <div class="grid grid-4">
-        {courses.map((course) => (
-          <div class="card fade-in">
+        {courses.map((course, i) => (
+          <div class="card" data-aos="fade-up" data-aos-delay={i * 100}>
             <h3>{course.name}</h3>
             <p class="price">{course.price}</p>
             <p>{course.description}</p>
@@ -127,12 +135,12 @@ const heroSlides = [
   </section>
 
   <GoogleReviews />
-  <InstagramFeed />
+  <InstagramFeed page="home" />
 
   <section class="cta-band">
     <PhotoBox class="cta-photo" ratio="21/9" hoverZoom label="Studio / bride getting ready, wide shot" />
     <div class="cta-overlay"></div>
-    <div class="container cta-content">
+    <div class="container cta-content" data-aos="zoom-in">
       <h2>Ready to book your date?</h2>
       <p>Reach out on WhatsApp for the fastest response, or send an enquiry through our contact page.</p>
       <a
@@ -212,7 +220,18 @@ const heroSlides = [
     .editorial-inner--reverse { grid-template-columns: 1fr 1fr; }
     .editorial-inner--reverse :global(.editorial-photo) { order: 1; }
   }
-  .classes-teaser { background: #fff; }
+  .signature-work { background: #fff; }
+  .packages { background: #fff; }
+  .courses-preview { position: relative; }
+  .courses-preview::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(185, 141, 62, 0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .courses-preview > .container { position: relative; z-index: 1; }
 
   /* ---------- Signature Work (asymmetric portfolio teaser) ---------- */
   .signature-grid {
@@ -225,6 +244,7 @@ const heroSlides = [
     position: relative;
     display: block;
     overflow: hidden;
+    border-radius: var(--radius);
   }
   @media (min-width: 700px) {
     .signature-grid {
@@ -253,6 +273,7 @@ const heroSlides = [
     position: relative;
     display: block;
     overflow: hidden;
+    border-radius: var(--radius);
     color: var(--color-ivory);
   }
   :global(.pkg-photo) { position: relative; }
@@ -269,7 +290,7 @@ const heroSlides = [
   .pkg-overlay .price { color: var(--color-gold); font-weight: 700; margin-bottom: 0.4rem; }
   .pkg-desc { font-size: 0.85rem; opacity: 0.9; margin-bottom: 0; }
 
-  .price { color: var(--color-emerald); font-weight: 700; margin-bottom: var(--space-1); }
+  .price { color: var(--color-gold); font-weight: 700; margin-bottom: var(--space-1); }
 
   /* ---------- CTA band with background photo ---------- */
   .cta-band {
@@ -282,13 +303,14 @@ const heroSlides = [
   :global(.cta-photo) {
     aspect-ratio: auto !important;
     height: 420px;
+    border-radius: 0;
   }
   :global(.cta-photo img),
   :global(.cta-photo .photo-box__placeholder) { height: 100%; border: none; }
   .cta-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(107,30,43,0.85), rgba(62,36,56,0.85));
+    background: linear-gradient(135deg, rgba(23,15,12,0.88), rgba(185,141,62,0.55));
   }
   .cta-content {
     position: absolute;

@@ -1,14 +1,20 @@
 ---
-// Uses PUBLIC_GOOGLE_MAPS_EMBED_KEY (client-safe, restrict it to Maps Embed API +
-// your domain in Google Cloud Console). Falls back to a static-style placeholder
-// with a "get directions" link when the key isn't set yet — see SETUP.md.
+// Prefers site.googleMapsEmbedSrc (a "Share > Embed a map" URL — no API key,
+// doesn't expire). Falls back to the PUBLIC_GOOGLE_MAPS_EMBED_KEY-based embed,
+// then to a directions-link placeholder if neither is set — see SETUP.md.
 import { site } from "../data/site";
 
 const mapsKey = import.meta.env.PUBLIC_GOOGLE_MAPS_EMBED_KEY;
 const query = encodeURIComponent(
   `${site.address.line1}, ${site.address.locality}, ${site.address.city}, ${site.address.state}`
 );
-const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${query}`;
+const directionsUrl = site.googleBusinessUrl || `https://www.google.com/maps/dir/?api=1&destination=${query}`;
+
+const mapSrc = site.googleMapsEmbedSrc
+  ? site.googleMapsEmbedSrc
+  : mapsKey
+    ? `https://www.google.com/maps/embed/v1/place?key=${mapsKey}&q=${query}`
+    : null;
 ---
 
 <section class="map-section">
@@ -16,17 +22,17 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${quer
     <span class="eyebrow">Find Us</span>
     <h2>Studio Location</h2>
 
-    {mapsKey ? (
+    {mapSrc ? (
       <iframe
         class="map-frame"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
-        src={`https://www.google.com/maps/embed/v1/place?key=${mapsKey}&q=${query}`}
+        src={mapSrc}
         allowfullscreen
       ></iframe>
     ) : (
       <div class="map-placeholder">
-        <p>Map embed connects once <code>PUBLIC_GOOGLE_MAPS_EMBED_KEY</code> is set — see <code>SETUP.md</code>.</p>
+        <p>Map embed connects once <code>site.googleMapsEmbedSrc</code> or <code>PUBLIC_GOOGLE_MAPS_EMBED_KEY</code> is set — see <code>SETUP.md</code>.</p>
         <a class="btn btn-outline" href={directionsUrl} target="_blank" rel="noopener noreferrer">
           Get Directions
         </a>

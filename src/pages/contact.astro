@@ -9,45 +9,73 @@ import { site } from "../data/site";
     <div class="container">
       <span class="eyebrow">Contact</span>
       <h1>Let's Talk About Your Day</h1>
-      <p>WhatsApp is the fastest way to reach us — the form below is a backup.</p>
+      <p>WhatsApp is the fastest way to reach us — or call or email directly below.</p>
     </div>
   </section>
 
-  <section>
-    <div class="container grid grid-2">
-      <div class="fade-in contact-actions">
+  <section class="contact-cards-section">
+    <div class="container">
+      <div class="contact-cards">
         <a
-          class="btn btn-whatsapp contact-btn"
+          class="contact-card contact-card--whatsapp fade-in"
           href={`https://wa.me/${site.whatsapp}?text=${encodeURIComponent("Hi! I'd like to enquire about a booking.")}`}
           target="_blank"
           rel="noopener noreferrer"
         >
-          Chat on WhatsApp
+          <span class="contact-card__icon">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.149-.15.298-.348.446-.522.15-.174.198-.298.298-.497.099-.198.05-.371-.05-.52-.099-.148-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.05 3.13 4.966 4.263 2.916 1.133 2.916.755 3.44.708.522-.05 1.758-.72 2.005-1.413.248-.694.248-1.29.174-1.413-.074-.124-.272-.198-.57-.347z"></path>
+              <path d="M12.004 2.003c-5.514 0-9.997 4.483-9.997 9.997 0 1.762.462 3.42 1.27 4.858L2 22l5.29-1.253a9.94 9.94 0 0 0 4.714 1.253h.004c5.514 0 9.996-4.483 9.996-9.997 0-2.67-1.04-5.178-2.926-7.065A9.935 9.935 0 0 0 12.004 2.003zm5.845 15.838c-.246.694-1.442 1.362-1.985 1.445-.508.078-1.152.11-1.858-.117-.428-.138-.978-.32-1.68-.626-2.955-1.276-4.884-4.24-5.03-4.437-.146-.198-1.19-1.583-1.19-3.021 0-1.437.756-2.144 1.023-2.437.267-.293.582-.366.777-.366.194 0 .389.002.559.01.178.008.417-.068.652.497.242.581.822 1.998.895 2.144.073.146.122.317.024.51-.098.194-.147.317-.293.487-.146.17-.307.38-.44.51-.145.146-.297.305-.128.596.17.291.756 1.24 1.62 2.006 1.113.99 2.05 1.297 2.343 1.443.293.146.464.122.634-.073.17-.194.723-.84.916-1.126.194-.286.388-.238.652-.144.267.098 1.688.797 1.977.943.29.146.483.219.554.34.073.121.073.696-.173 1.39z"></path>
+            </svg>
+          </span>
+          <span class="contact-card__body">
+            <span class="contact-card__label">Chat on WhatsApp</span>
+            <span class="contact-card__value">+91 {site.whatsapp.slice(2)}</span>
+          </span>
+          <span class="contact-card__arrow" aria-hidden="true">→</span>
         </a>
-        <a class="btn btn-outline contact-btn" href={`tel:${site.phone}`}>Call {site.phone}</a>
-        <a class="btn btn-outline contact-btn" href={`mailto:${site.email}`}>Email Us</a>
+
+        <a class="contact-card contact-card--call fade-in" href={`tel:${site.phone}`}>
+          <span class="contact-card__icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+          </span>
+          <span class="contact-card__body">
+            <span class="contact-card__label">Call Us</span>
+            <span class="contact-card__value">{site.phone}</span>
+          </span>
+          <span class="contact-card__arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="contact-card contact-card--email fade-in" href={`mailto:${site.email}`}>
+          <span class="contact-card__icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16v16H4z" opacity="0"></path>
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="m2 6 10 7 10-7"></path>
+            </svg>
+          </span>
+          <span class="contact-card__body">
+            <span class="contact-card__label">Email Us</span>
+            <span class="contact-card__value">{site.email}</span>
+          </span>
+          <span class="contact-card__arrow" aria-hidden="true">→</span>
+        </a>
       </div>
 
-      <form class="fade-in contact-form" action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="PLACEHOLDER_WEB3FORMS_ACCESS_KEY" />
-        <label>
-          Name
-          <input type="text" name="name" required />
-        </label>
-        <label>
-          Phone
-          <input type="tel" name="phone" required />
-        </label>
-        <label>
-          Event Date
-          <input type="date" name="event_date" />
-        </label>
-        <label>
-          Message
-          <textarea name="message" rows="4" required></textarea>
-        </label>
-        <button class="btn btn-primary" type="submit">Send Enquiry</button>
-      </form>
+      <div class="review-qr-card fade-in">
+        <img
+          src="/images/misc/google-review-qr.png"
+          alt="QR code to Renuka's Makeover on Google — scan to view or leave a review"
+          width="864"
+          height="900"
+          loading="lazy"
+        />
+        <span class="review-qr-card__body">
+          <span class="review-qr-card__title">Scan to review us on Google</span>
+        </span>
+      </div>
     </div>
   </section>
 
@@ -55,24 +83,86 @@ import { site } from "../data/site";
 </BaseLayout>
 
 <style>
-  .contact-actions { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
-  .contact-btn { width: 100%; justify-content: center; }
-  @media (min-width: 640px) { .contact-btn { width: auto; } }
-
-  .contact-form {
+  .contact-cards-section { background: var(--color-ivory); }
+  .contact-cards {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    background: #fff;
-    padding: var(--space-3);
-    border: 1px solid rgba(42, 36, 32, 0.08);
+    max-width: 640px;
+    margin: 0 auto;
   }
-  .contact-form label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; font-weight: 600; }
-  .contact-form input, .contact-form textarea {
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    padding: 0.6rem;
-    border: 1px solid rgba(42, 36, 32, 0.2);
-    border-radius: 2px;
+
+  .contact-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: #fff;
+    border: 1px solid rgba(42, 36, 32, 0.08);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 8px rgba(42, 36, 32, 0.05);
+    text-decoration: none;
+    color: var(--color-ink);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .contact-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(42, 36, 32, 0.1);
+  }
+
+  .contact-card__icon {
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .contact-card--whatsapp .contact-card__icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
+  .contact-card--whatsapp:hover { border-color: rgba(37, 211, 102, 0.4); }
+  .contact-card--call .contact-card__icon { background: rgba(23, 15, 12, 0.08); color: var(--color-emerald); }
+  .contact-card--call:hover { border-color: rgba(23, 15, 12, 0.25); }
+  .contact-card--email .contact-card__icon { background: rgba(185, 141, 62, 0.14); color: var(--color-gold); }
+  .contact-card--email:hover { border-color: rgba(185, 141, 62, 0.4); }
+
+  .contact-card__body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+  .contact-card__label { font-size: 0.8rem; letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.6; }
+  .contact-card__value { font-size: 1.15rem; font-weight: 600; overflow-wrap: anywhere; }
+
+  .contact-card__arrow {
+    margin-left: auto;
+    flex: 0 0 auto;
+    font-size: 1.3rem;
+    opacity: 0.35;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .contact-card:hover .contact-card__arrow { transform: translateX(4px); opacity: 0.8; }
+
+  @media (min-width: 640px) {
+    .contact-card__value { font-size: 1.3rem; }
+  }
+
+  .review-qr-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+    max-width: 640px;
+    margin: var(--space-4) auto 0;
+    padding: var(--space-3);
+    background: #fff;
+    border: 1px solid rgba(42, 36, 32, 0.08);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 8px rgba(42, 36, 32, 0.05);
+    color: var(--color-ink);
+  }
+  .review-qr-card img { width: 220px; height: auto; border-radius: var(--radius-sm); }
+  .review-qr-card__body { display: flex; flex-direction: column; gap: 0.25rem; }
+  .review-qr-card__title { font-size: 0.85rem; font-weight: 600; opacity: 0.8; }
+
+  @media (min-width: 640px) {
+    .review-qr-card img { width: 240px; }
   }
 </style>

@@ -1,15 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 :root {
   --color-ivory: #faf6f0;
-  --color-ink: #2a2420;
-  --color-emerald: #1f4d3d;
-  --color-maroon: #6b1e2b;
-  --color-plum: #3e2438;
+  --color-ink: #170f0c;
+  --color-emerald: #1c1512;
+  --color-maroon: #5c1620;
+  --color-plum: #211714;
   --color-gold: #b98d3e;
+  --color-champagne: #d2b789;
 
-  --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Libre Bodoni', Georgia, serif;
+  --font-sans: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --max-width: 1180px;
   --space-1: 0.5rem;
@@ -17,6 +18,11 @@
   --space-3: 1.5rem;
   --space-4: 2.5rem;
   --space-5: 4rem;
+
+  /* Shared corner-rounding scale — use these everywhere instead of one-off values. */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -28,7 +34,12 @@ html {
 
 body {
   margin: 0;
-  background: var(--color-ivory);
+  background:
+    radial-gradient(circle at 12% 15%, rgba(185, 141, 62, 0.09), transparent 42%),
+    radial-gradient(circle at 88% 55%, rgba(210, 183, 137, 0.12), transparent 46%),
+    radial-gradient(circle at 30% 85%, rgba(185, 141, 62, 0.07), transparent 40%),
+    var(--color-ivory);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.6;
@@ -108,6 +119,7 @@ section { padding: var(--space-5) 0; }
 .card {
   background: #fff;
   border: 1px solid rgba(42, 36, 32, 0.08);
+  border-radius: var(--radius);
   padding: var(--space-3);
 }
 
